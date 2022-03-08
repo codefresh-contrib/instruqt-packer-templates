@@ -3,7 +3,7 @@ variable "k3s_version" {
 }
 
 source "googlecompute" "k3s" {
-    project_id   = "instruqt"
+    project_id   = "instruqt-codefresh"
     region       = "europe-west1"
     zone         = "europe-west1-b"
 
@@ -31,7 +31,6 @@ build {
         sources = [
             "files/k3s.service",
             "files/kubectl-proxy.service",
-            "files/kube-dashboard.service",
         ]
         destination = "/etc/systemd/system/"
     }
@@ -39,24 +38,5 @@ build {
     provisioner "file" {
         source      = "files/k3s-start.sh"
         destination = "/usr/local/bin/k3s-start.sh"
-    }
-
-    provisioner "file" {
-        source      = "files/start.sh"
-        destination = "/usr/bin/start.sh"
-    }
-
-    provisioner "shell" {
-        inline = ["mkdir -p /opt/kube-dashboard"]
-    }
-
-    provisioner "file" {
-        source      = "files/dashboard.yml"
-        destination = "/opt/kube-dashboard/dashboard.yml"
-    }
-
-    provisioner "file" {
-        source      = "files/dashboard-sa.yml"
-        destination = "/opt/kube-dashboard/dashboard-sa.yml"
     }
 }
